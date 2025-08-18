@@ -1,32 +1,97 @@
+import { useState } from 'react';
 import './App.css';
-//import cells from './components/arrayOfCells';
 import Cell from './components/Cell';
+import { evaluate } from 'mathjs';
 
 function App() {
+  const [display, setDisplay] = useState('0');
+
+  function Increment() {
+    const expression = display.replace(/[+\-*/]+$/g, '');
+    setDisplay((evaluate(expression) + 1).toString());
+  }
+
+  function Decrement() {
+    const expression = display.replace(/[+\-*/]+$/g, '');
+    setDisplay((evaluate(expression) - 1).toString());
+  }
+
+  function Clear() {
+    setDisplay('0');
+  }
+
+  function handleClick(value: string) {
+    if (value === '=') {
+      const expression = display.replace(/[+\-*/]+$/g, '');
+      setDisplay(evaluate(expression).toString());
+      return;
+    }
+
+    setDisplay((prev) => (prev === '0' ? value : prev + value));
+  }
+
   return (
     <>
       <h1 className="main-title">useState Calculator</h1>
       <div className="calculator-container">
-        <Cell className="display">0</Cell>
-        <Cell className="increment">+1</Cell>
-        <Cell className="decrement">-1</Cell>
-        <Cell className="button">1</Cell>
-        <Cell className="button">2</Cell>
-        <Cell className="button">3</Cell>
-        <Cell className="button operator">+</Cell>
-        <Cell className="button">4</Cell>
-        <Cell className="button">5</Cell>
-        <Cell className="button">6</Cell>
-        <Cell className="button operator">-</Cell>
-        <Cell className="button">7</Cell>
-        <Cell className="button">8</Cell>
-        <Cell className="button">9</Cell>
-        <Cell className="button operator">x</Cell>
-        <Cell className="button">0</Cell>
-        <Cell className="button">,</Cell>
-        <Cell className="button">=</Cell>
-        <Cell className="button operator">÷</Cell>
-        <Cell className="button clear">С</Cell>
+        <Cell className="display">{display}</Cell>
+        <Cell className="increment" onClick={Increment}>
+          +1
+        </Cell>
+        <Cell className="decrement" onClick={Decrement}>
+          -1
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('1')}>
+          1
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('2')}>
+          2
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('3')}>
+          3
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('+')}>
+          +
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('4')}>
+          4
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('5')}>
+          5
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('6')}>
+          6
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('-')}>
+          -
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('7')}>
+          7
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('8')}>
+          8
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('9')}>
+          9
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('*')}>
+          x
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('0')}>
+          0
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('.')}>
+          ,
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('=')}>
+          =
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('/')}>
+          ÷
+        </Cell>
+        <Cell className="button clear" onClick={Clear}>
+          С
+        </Cell>
       </div>
     </>
   );
