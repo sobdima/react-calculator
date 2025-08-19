@@ -1,9 +1,13 @@
-//РАЗОБРАТЬСЯ С ПРЕДУПРЕЖДЕНИЕМ в useCallback
-//ВЫНЕСТИ ФУНКЦИИ В utils   по типу такого => utils/handleKeyPress.tsx OR utils/functions.tsx
+//СТОИТ вынести:handleKeyPress() — частично. В Преплексити, в спэйсе последний чат, последнее сообщение.
+
 //ПОПРОБОВАТЬ ПОИСКАТЬ ОПТИМИЗАЦИЮ ПО РЕНДЕРИНГУ ВСЕХ КОПМОНЕНТОВ </Cell> - МОЖЕТ МОЖНО НАЙТИ СПОСОБ НЕ ПРОПИСЫВАТЬ ИХ СТОЛЬКО РАЗ ПОДРЯД, МОЖЕТ МОЖНО ПРИДУМАТЬ КАКОЙ-ТО ЦИКЛ
+
 //ПОСМОТРЕТЬ МОЖЕТ В ЭТОЙ ФУНКЦИИ onClick={() => handleClick('1')} МОЖНО ПЕРЕДАВАТЬ НЕ "1", КАК МАГИЧЕСКОЕ ЧИСЛО, А КОНКРЕТНО innerText САМОГО ЭЛЕМЕНТА (ЧЕРЕЗ target ???)
+
 //МОЖНО ДОБАВИТЬ АНИМАЦИЮ КНОПОК - ТИПА КЛИКНУЛ ПО КНОПКЕ, И ОНА НА ПОЛСЕКУНДЫ ИЗМЕНИЛА ЦВЕТ НА ЖЕЛТЕНКИЙ ИЛИ СЕРЕНЬКИЙ
+
 //ДЕПЛОЙ НА НЕТЛИФАЙ + СДЕЛАТЬ README.MD ФАЙЛ ДЛЯ ГИТХАБА С ОПИСАНИЕМ ПРОЕКТА
+
 import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import Cell from './components/Cell';
@@ -26,17 +30,18 @@ function App() {
     setDisplay('0');
   }
 
-  function handleClick(value: string) {
-    if (value === '=') {
-      console.log('Get an expression: ', display);
-      const expression = display.replace(/[+\-*/]+$/g, '');
-      console.log('Get a trimmed expression: ', expression);
-      setDisplay(evaluate(expression).toString());
-      return;
-    }
+  const handleClick = useCallback(
+    (value: string) => {
+      if (value === '=') {
+        const expression = display.replace(/[+\-*/]+$/g, '');
+        setDisplay(evaluate(expression).toString());
+        return;
+      }
 
-    setDisplay((prev) => (prev === '0' ? value : prev + value));
-  }
+      setDisplay((prev) => (prev === '0' ? value : prev + value));
+    },
+    [display]
+  );
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
@@ -67,11 +72,10 @@ function App() {
       if (key === 'Backspace') setDisplay('0');
 
       if (allowKeys.includes(value)) {
-        console.log('Pressed: ', value);
         handleClick(value);
       }
     },
-    [display] //РАЗОБРАТЬСЯ С ЭТИМ ПРЕДУПРЕЖДЕНИЕМ
+    [handleClick]
   );
 
   useEffect(() => {
