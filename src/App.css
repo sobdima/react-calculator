@@ -36,6 +36,7 @@
   align-items: center;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
 .increment {
@@ -54,6 +55,11 @@
   background: #444;
   border: none;
   font-size: 1.2rem;
+  color: white;
+}
+
+.button.active, .increment.active, .decrement.active {
+  background-color: #cbd0d4;
   color: white;
 }
 

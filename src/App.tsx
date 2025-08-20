@@ -6,11 +6,16 @@ import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import Cell from './components/Cell';
 import { evaluate } from 'mathjs';
-import buttons from './components/buttons';
 import allowKeys from './components/allowKeys';
 
 function App() {
   const [display, setDisplay] = useState('0');
+  const [activeButton, setActiveButton] = useState<string | null>(null);
+
+  function pressButton(key: string) {
+    setActiveButton(key);
+    setTimeout(() => setActiveButton(null), 150);
+  }
 
   function Increment() {
     const expression = display.replace(/[+\-*/]+$/g, '');
@@ -28,6 +33,8 @@ function App() {
 
   const handleClick = useCallback(
     (value: string) => {
+      pressButton(value);
+
       if (value === '=') {
         const expression = display.replace(/[+\-*/]+$/g, '');
         setDisplay(evaluate(expression).toString());
@@ -45,9 +52,14 @@ function App() {
       let value = key;
 
       if (key === 'Enter') value = '=';
-      if (key === 'Backspace') setDisplay('0');
+      if (key === 'Backspace') {
+        value = 'clear';
+        setDisplay('0');
+        pressButton(value);
+      }
 
       if (allowKeys.includes(value)) {
+        pressButton(value);
         handleClick(value);
       }
     },
@@ -67,29 +79,83 @@ function App() {
       <h1 className="main-title">useState Calculator</h1>
       <div className="calculator-container">
         <Cell className="display">{display}</Cell>
-        <Cell className="increment" onClick={Increment}>
+
+        <Cell
+          className={`increment ${activeButton === 'increment' ? 'active' : ''}`}
+          onClick={() => {
+            pressButton('increment');
+            Increment();
+          }}
+        >
           +1
         </Cell>
         <Cell className="decrement" onClick={Decrement}>
           -1
         </Cell>
-        {buttons.map(({ label, value, action, className }, i) => {
-          let onClick;
 
-          if (value) onClick = () => handleClick(value);
-          if (action === 'clear') onClick = Clear;
-          if (action === 'equal') onClick = () => handleClick('=');
-
-          return (
-            <Cell
-              key={i}
-              className={`button ${className ?? ''}`}
-              onClick={onClick}
-            >
-              {label}
-            </Cell>
-          );
-        })}
+        <Cell
+          className={`button ${activeButton === '1' ? 'active' : ''}`}
+          onClick={() => handleClick('1')}
+        >
+          1
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('2')}>
+          2
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('3')}>
+          3
+        </Cell>
+        <Cell
+          className={`button operator ${activeButton === '+' ? 'active' : ''}`}
+          onClick={() => handleClick('+')}
+        >
+          +
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('4')}>
+          4
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('5')}>
+          5
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('6')}>
+          6
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('-')}>
+          -
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('7')}>
+          7
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('8')}>
+          8
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('9')}>
+          9
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('*')}>
+          x
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('0')}>
+          0
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('.')}>
+          ,
+        </Cell>
+        <Cell className="button" onClick={() => handleClick('=')}>
+          =
+        </Cell>
+        <Cell className="button operator" onClick={() => handleClick('/')}>
+          ÷
+        </Cell>
+        <Cell
+          className={`button clear ${activeButton === 'clear' ? 'active' : ''}`}
+          onClick={() => {
+            pressButton('clear');
+            Clear();
+          }}
+        >
+          С
+        </Cell>
       </div>
     </>
   );
