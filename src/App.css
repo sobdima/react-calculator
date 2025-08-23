@@ -10,7 +10,7 @@
 }
 
 .calculator-container {
-  border: 1px solid red;
+  /* border: 1px solid red; */
   display: grid;
   gap: 10px;
   padding: 15px;
@@ -70,4 +70,8 @@
 .clear {
   grid-column: span 4;
   background: #e74c3c;
+}
+
+.equal {
+  background:rgb(26, 131, 26)
 }

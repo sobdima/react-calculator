@@ -77,7 +77,7 @@ function App() {
 
   return (
     <>
-      <h1 className="main-title">useState Calculator</h1>
+      <h1 className="main-title">Simple Calculator</h1>
       <div className="calculator-container">
         <Cell className="display">{display}</Cell>
 
@@ -185,7 +185,7 @@ function App() {
           .
         </Cell>
         <Cell
-          className={`button ${activeButton === '=' ? 'active' : ''}`}
+          className={`button equal ${activeButton === '=' ? 'active' : ''}`}
           onClick={() => handleClick('=')}
         >
           =
