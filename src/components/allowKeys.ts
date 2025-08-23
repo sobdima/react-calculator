@@ -9,13 +9,13 @@ const allowKeys = [
   '7',
   '8',
   '9',
-  ',',
   '.',
   '=',
   '+',
   '-',
   '*',
   '/',
+  'C',
 ];
 
 export default allowKeys;
